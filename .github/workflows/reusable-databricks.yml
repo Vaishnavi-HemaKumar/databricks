@@ -33,10 +33,7 @@ jobs:
 
       - name: Configure Databricks CLI
         run: |
-          mkdir -p ~/.databricks-cli
-          echo "[DEFAULT]" > ~/.databricks-cli/config
-          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
-          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
+          databricks configure --host ${{ secrets.DATABRICKS_HOST }} --token ${{ secrets.DATABRICKS_TOKEN }}
 
       - name: Upload notebook to Databricks ${{ inputs.environment }}
         run: |
