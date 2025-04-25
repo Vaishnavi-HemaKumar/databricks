@@ -49,13 +49,16 @@ jobs:
       #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
       #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
-      - name: Upload notebooks to Databricks
+      - name: Find and upload notebooks to Databricks ${{ inputs.environment }}
         run: |
-          for notebook in $(find notebooks/** -type f \( -iname "*.dbc" -o -iname "*.py" -o -iname "*.ipynb" \)); do
+          # Loop over each notebook found in the notebooks directory
+          for notebook in $(find ${{ inputs.notebook_path }} -type f \( -iname "*.dbc" -o -iname "*.py" -o -iname "*.ipynb" \)); do
+            # Print the notebook path for debugging
+            echo "Uploading $notebook to ${{ inputs.databricks_path }}/$(basename $notebook)"
+            
             # Upload each notebook to the specified Databricks path
-            databricks workspace import $notebook /Shared/folder/$(basename $notebook) --language PYTHON --overwrite
+            databricks workspace import "$notebook" "${{ inputs.databricks_path }}/$(basename $notebook)" --language PYTHON --overwrite
           done
-
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
