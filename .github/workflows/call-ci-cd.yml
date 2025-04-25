@@ -19,7 +19,7 @@ jobs:
           environment: dev  # Sync with the dev environment
           notebook_path: notebooks/**  # Path to the notebook to upload
           databricks_path: /Shared/**  # Path in the Databricks workspace
-        secrets:
+        env:
           DATABRICKS_HOST_DEV: ${{ secrets.DATABRICKS_HOST_DEV }}
           DATABRICKS_TOKEN_DEV: ${{ secrets.DATABRICKS_TOKEN_DEV }}
           DATABRICKS_HOST_TEST: ${{ secrets.DATABRICKS_HOST_TEST }}
