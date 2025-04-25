@@ -13,7 +13,7 @@ jobs:
       environment: dev  # Sync with the dev environment
       notebook_path: notebooks/**  # Path to the notebook to upload
       databricks_path: /Shared/folder/ # Path in the Databricks workspace
-      repo_path: /Workspace/Users/vaishnavi.hemakumar@tigeranalytics.com/databricks
+      repo_path: /Repos/vaishnavi.hemakumar@tigeranalytics.com/databricks 
       repo_branch: dev
     secrets:
       DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
