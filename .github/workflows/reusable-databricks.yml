@@ -33,8 +33,8 @@ jobs:
 
       - name: Configure Databricks CLI using environment variables
         run: |
-          export DATABRICKS_HOST=${{ secrets.DATABRICKS_HOST }}
-          export DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}
+          export DATABRICKS_HOST_DEV=${{ secrets.DATABRICKS_HOST }}
+          export DATABRICKS_TOKEN_DEV=${{ secrets.DATABRICKS_TOKEN }}
       - name: Upload notebook to Databricks ${{ inputs.environment }}
         run: |
           databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
