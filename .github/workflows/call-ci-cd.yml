@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Call Reusable Databricks CI/CD Workflow
         uses: ./.github/workflows/reusable-databricks.yml  # Path to the reusable workflow
