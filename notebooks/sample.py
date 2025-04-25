@@ -1,1 +1,1 @@
-print("Hello Databricks!!")
+print("Demo on AWS Databricks CI/CD using Github Action")
