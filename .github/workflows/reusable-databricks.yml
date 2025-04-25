@@ -37,4 +37,4 @@ jobs:
 
       - name: Upload notebook to ${{ inputs.environment }}
         run: |
-          databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --overwrite
+          databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
