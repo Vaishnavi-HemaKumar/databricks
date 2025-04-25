@@ -29,12 +29,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Databricks CLI
-        run: pip install databricks-cli
+        run: pip install databricks-cli --upgrade  # Ensure the latest version
 
-      - name: Configure Databricks CLI
+      - name: Configure Databricks CLI using environment variables
         run: |
-          databricks configure --host ${{ secrets.DATABRICKS_HOST }} --token ${{ secrets.DATABRICKS_TOKEN }}
-
+          export DATABRICKS_HOST=${{ secrets.DATABRICKS_HOST }}
+          export DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}
       - name: Upload notebook to Databricks ${{ inputs.environment }}
         run: |
           databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
