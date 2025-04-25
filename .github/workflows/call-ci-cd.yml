@@ -4,7 +4,7 @@ name: Sync Databricks Workspace on PR Merge
 on:
   push:
     branches:
-      - dev  # Trigger on push to dev (after PR merge)
+      - feature/test  # Trigger on push to dev (after PR merge)
 
 jobs:
   sync_workspace:
