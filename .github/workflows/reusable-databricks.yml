@@ -30,11 +30,14 @@ jobs:
 
       - name: Configure Databricks CLI
         run: |
-          mkdir -p /home/runner/.databricks-cli
-          echo "[DEFAULT]" > /home/runner/.databricks-cli/config
-          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> /home/runner/.databricks-cli/config
-          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> /home/runner/.databricks-cli/config
+          echo "Configuring Databricks CLI with environment variables"
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
       - name: Upload notebook to ${{ inputs.environment }}
         run: |
           databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
