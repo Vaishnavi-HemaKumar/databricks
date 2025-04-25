@@ -2,13 +2,15 @@ name: CI/CD Trigger for Databricks
 
 on:
   push:
+    branches:
+      - feature/test
     paths:
       - 'notebooks/**'
   workflow_dispatch:
     inputs:
       promote_to_test:
         description: 'Promote to testuction environment?'
-        required: false
+        required: true
         default: 'false'
 
 jobs:
