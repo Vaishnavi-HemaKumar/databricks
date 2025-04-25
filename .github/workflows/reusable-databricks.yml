@@ -31,10 +31,15 @@ jobs:
       - name: Install Databricks CLI
         run: pip install databricks-cli --upgrade  # Ensure the latest version
 
-      - name: Configure Databricks CLI using environment variables
+
+      - name: Configure Databricks CLI
         run: |
-          export DATABRICKS_HOST=${{ secrets.DATABRICKS_HOST }}
-          export DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}
+          mkdir -p ~/.databricks-cli  # Ensure the directory exists
+          echo "[DEFAULT]" > ~/.databricks-cli/config
+          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
+          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
+
       - name: Upload notebook to Databricks ${{ inputs.environment }}
         run: |
           databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
+
