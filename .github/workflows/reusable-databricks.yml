@@ -30,6 +30,7 @@ jobs:
 
       - name: Configure Databricks CLI for the correct environment
         run: |
+          mkdir -p ~/.databricks-cli  # Create the directory if it doesn't exist
           if [ "${{ inputs.environment }}" == "dev" ]; then
             echo "[DEFAULT]" > ~/.databricks-cli/config
             echo "host = ${{ secrets.DATABRICKS_HOST_DEV }}" >> ~/.databricks-cli/config
