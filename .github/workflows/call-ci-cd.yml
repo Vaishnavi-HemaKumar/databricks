@@ -14,5 +14,5 @@ jobs:
       notebook_path: notebooks/**  # Path to the notebook to upload
       databricks_path: /Shared/**  # Path in the Databricks workspace
     secrets:
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
-      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
