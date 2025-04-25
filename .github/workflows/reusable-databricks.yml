@@ -30,16 +30,16 @@ jobs:
 
       - name: Print Debug Information (for testing)
         run: |
-          echo "DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}"
-          echo "DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}"
+          echo "DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}"
+          echo "DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}"
 
       - name: Configure Databricks CLI for the correct environment
         run: |
           mkdir -p ~/.databricks-cli
           if [ "${{ inputs.environment }}" == "dev" ]; then
             echo "[DEFAULT]" > ~/.databricks-cli/config
-            echo "host = ${{ secrets.DATABRICKS_HOST_DEV }}" >> ~/.databricks-cli/config
-            echo "token = ${{ secrets.DATABRICKS_TOKEN_DEV }}" >> ~/.databricks-cli/config
+            echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
+            echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
           elif [ "${{ inputs.environment }}" == "test" ]; then
             echo "[DEFAULT]" > ~/.databricks-cli/config
             echo "host = ${{ secrets.DATABRICKS_HOST_TEST }}" >> ~/.databricks-cli/config
@@ -54,5 +54,5 @@ jobs:
           echo "Uploading notebook to Databricks..."
           databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
