@@ -13,13 +13,9 @@ on:
         required: true
         type: string
     secrets:
-      DATABRICKS_HOST_DEV:
+      DATABRICKS_HOST:
         required: true
-      DATABRICKS_TOKEN_DEV:
-        required: true
-      DATABRICKS_HOST_TEST:
-        required: true
-      DATABRICKS_TOKEN_TEST:
+      DATABRICKS_TOKEN:
         required: true
 
 jobs:
@@ -33,22 +29,14 @@ jobs:
       - name: Install Databricks CLI
         run: pip install databricks-cli
 
+
       - name: Configure Databricks CLI
         run: |
           mkdir -p ~/.databricks-cli
-          if [ "${{ inputs.environment }}" == "dev" ]; then
-            echo "[DEFAULT]" > ~/.databricks-cli/config
-            echo "host = ${{ secrets.DATABRICKS_HOST_DEV }}" >> ~/.databricks-cli/config
-            echo "token = ${{ secrets.DATABRICKS_TOKEN_DEV }}" >> ~/.databricks-cli/config
-          elif [ "${{ inputs.environment }}" == "test" ]; then
-            echo "[DEFAULT]" > ~/.databricks-cli/config
-            echo "host = ${{ secrets.DATABRICKS_HOST_TEST }}" >> ~/.databricks-cli/config
-            echo "token = ${{ secrets.DATABRICKS_TOKEN_TEST }}" >> ~/.databricks-cli/config
-          else
-            echo "Invalid environment specified"
-            exit 1
-          fi
+          echo "[DEFAULT]" > ~/.databricks-cli/config
+          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
+          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
 
-      - name: Upload notebook to Databricks
+      - name: Upload notebook to Databricks ${{ inputs.environment }}
         run: |
-          echo "Uploading notebook to ${{ inputs.environment }} workspace..."
+          databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite

@@ -1,3 +1,5 @@
+# .github/workflows/call-ci-cd.yml
+
 name: Sync Databricks Workspace on PR Merge
 
 on:
@@ -14,13 +16,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Call Reusable Databricks CI/CD Workflow
-        uses: ./.github/workflows/reusable-databricks.yml  # Adjust path if needed
+        uses: ./.github/workflows/reusable_databricks.yml  # Path to the reusable workflow
         with:
           environment: dev  # Sync with the dev environment
           notebook_path: notebooks/**  # Path to the notebook to upload
           databricks_path: /Shared/**  # Path in the Databricks workspace
         env:
-          DATABRICKS_HOST_DEV: ${{ secrets.DATABRICKS_HOST_DEV }}
-          DATABRICKS_TOKEN_DEV: ${{ secrets.DATABRICKS_TOKEN_DEV }}
-          DATABRICKS_HOST_TEST: ${{ secrets.DATABRICKS_HOST_TEST }}
-          DATABRICKS_TOKEN_TEST: ${{ secrets.DATABRICKS_TOKEN_TEST }}
+          DATABRICKS_HOST_DEV: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN_DEV: ${{ secrets.DATABRICKS_TOKEN }}
