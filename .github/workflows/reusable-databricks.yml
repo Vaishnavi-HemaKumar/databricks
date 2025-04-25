@@ -49,6 +49,14 @@ jobs:
       #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
       #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
+      - name: Ensure Databricks folder exists
+        run: |
+          # Create the folder in Databricks if it does not exist
+          databricks workspace mkdirs "${{ inputs.databricks_path }}" || echo "Folder already exists"
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          
       - name: Find and upload notebooks to Databricks ${{ inputs.environment }}
         run: |
           # Loop over each notebook found in the notebooks directory
