@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - feature/test
-    paths:
-      - 'notebooks/**'
+    # paths:
+    #   - 'notebooks/**'
   workflow_dispatch:
     inputs:
       promote_to_test:

@@ -28,7 +28,7 @@ aggregated_df.show()
 # Write the processed data back to S3
 aggregated_df.write.csv(output_path, header=True, mode="overwrite")
 
-print(f" Processed data written to {output_path}")
+print(f"✅ Processed data written to {output_path}")
 # Stop Spark after processing
 if spark:
     spark.stop()
