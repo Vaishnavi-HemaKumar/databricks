@@ -56,16 +56,22 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          
+
       - name: Find and upload notebooks to Databricks ${{ inputs.environment }}
         run: |
           # Loop over each notebook found in the notebooks directory
           for notebook in $(find ${{ inputs.notebook_path }} -type f \( -iname "*.dbc" -o -iname "*.py" -o -iname "*.ipynb" \)); do
+            # Get the base name of the notebook (filename only)
+            notebook_name=$(basename "$notebook")
+            
+            # Construct the target path in Databricks (make sure there's no double slashes)
+            target_path="${{ inputs.databricks_path }}/$notebook_name"
+
             # Print the notebook path for debugging
-            echo "Uploading $notebook to ${{ inputs.databricks_path }}/$(basename $notebook)"
+            echo "Uploading $notebook to $target_path"
             
             # Upload each notebook to the specified Databricks path
-            databricks workspace import "$notebook" "${{ inputs.databricks_path }}/$(basename $notebook)" --language PYTHON --overwrite
+            databricks workspace import "$notebook" "$target_path" --language PYTHON --overwrite
           done
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
