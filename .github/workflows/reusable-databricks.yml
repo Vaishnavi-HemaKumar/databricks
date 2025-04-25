@@ -1,4 +1,4 @@
-name: Reusable Databricks CI/CD
+name: Reusable Databricks CI/CD Workflow
 
 on:
   workflow_call:
@@ -13,14 +13,19 @@ on:
         required: true
         type: string
     secrets:
-      DATABRICKS_HOST:
+      DATABRICKS_HOST_DEV:
         required: true
-      DATABRICKS_TOKEN:
+      DATABRICKS_TOKEN_DEV:
+        required: true
+      DATABRICKS_HOST_TEST:
+        required: true
+      DATABRICKS_TOKEN_TEST:
         required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -28,18 +33,13 @@ jobs:
       - name: Install Databricks CLI
         run: pip install databricks-cli
 
-      - name: Print Debug Information (for testing)
-        run: |
-          echo "DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}"
-          echo "DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}"
-
-      - name: Configure Databricks CLI for the correct environment
+      - name: Configure Databricks CLI
         run: |
           mkdir -p ~/.databricks-cli
           if [ "${{ inputs.environment }}" == "dev" ]; then
             echo "[DEFAULT]" > ~/.databricks-cli/config
-            echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
-            echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
+            echo "host = ${{ secrets.DATABRICKS_HOST_DEV }}" >> ~/.databricks-cli/config
+            echo "token = ${{ secrets.DATABRICKS_TOKEN_DEV }}" >> ~/.databricks-cli/config
           elif [ "${{ inputs.environment }}" == "test" ]; then
             echo "[DEFAULT]" > ~/.databricks-cli/config
             echo "host = ${{ secrets.DATABRICKS_HOST_TEST }}" >> ~/.databricks-cli/config
@@ -49,10 +49,6 @@ jobs:
             exit 1
           fi
 
-      - name: Upload notebook to ${{ inputs.environment }}
+      - name: Upload notebook to Databricks
         run: |
-          echo "Uploading notebook to Databricks..."
-          databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          echo "Uploading notebook to ${{ inputs.environment }} workspace..."
