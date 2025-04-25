@@ -5,7 +5,7 @@ name: Sync Databricks Workspace on PR Merge
 on:
   push:
     branches:
-      - dev  # Trigger when changes are pushed to dev branch (after PR merge)
+      - feature/test  # Trigger when changes are pushed to dev branch (after PR merge)
 
 jobs:
   sync_workspace:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Call Reusable Databricks CI/CD Workflow
-        uses: ./.github/workflows/reusable_databricks.yml  # Path to the reusable workflow
+        uses: ./.github/workflows/reusable-databricks.yml  # Path to the reusable workflow
         with:
           environment: dev  # Sync with the dev environment
           notebook_path: notebooks/**  # Path to the notebook to upload
