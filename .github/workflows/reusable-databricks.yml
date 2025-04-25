@@ -48,41 +48,6 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
-      # - name: Upload notebook to Databricks ${{ inputs.environment }}
-      #   run: |
-      #     databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
-      #   env:
-      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
-      # - name: Ensure Databricks folder exists
-      #   run: |
-      #     # Create the folder in Databricks if it does not exist
-      #     databricks workspace mkdirs "${{ inputs.databricks_path }}" || echo "Folder already exists"
-      #   env:
-      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
-      # - name: Find and upload notebooks to Databricks ${{ inputs.environment }}
-      #   run: |
-      #     # Loop over each notebook found in the notebooks directory
-      #     for notebook in $(find ${{ inputs.notebook_path }} -type f \( -iname "*.dbc" -o -iname "*.py" -o -iname "*.ipynb" \)); do
-      #       # Get the base name of the notebook (filename only)
-      #       notebook_name=$(basename "$notebook")
-            
-      #       # Construct the target path in Databricks (make sure there's no double slashes)
-      #       target_path="${{ inputs.databricks_path }}/$notebook_name"
-
-      #       # Print the notebook path for debugging
-      #       echo "Uploading $notebook to $target_path"
-            
-      #       # Upload each notebook to the specified Databricks path
-      #       databricks workspace import "$notebook" "$target_path" --language PYTHON --overwrite
-      #     done
-      #   env:
-      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
       - name: Sync latest Git changes in Databricks Repo
         if: ${{ inputs.environment == 'dev' && inputs.repo_path != '' && inputs.repo_branch != '' }}
         run: |
