@@ -18,8 +18,8 @@ jobs:
         run: |
           echo "Setting up Databricks CLI for dev environment"
           echo "[DEFAULT]" > ~/.databricks-cli/config
-          echo "host = ${{ secrets.DATABRICKS_HOST_DEV }}" >> ~/.databricks-cli/config
-          echo "token = ${{ secrets.DATABRICKS_TOKEN_DEV }}" >> ~/.databricks-cli/config
+          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
+          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
 
       - name: Call Reusable Databricks CI/CD Workflow for Dev
         uses: ./.github/workflows/reusable_databricks.yml  # Path to the reusable workflow
@@ -28,5 +28,5 @@ jobs:
           notebook_path: notebooks/**  # Path to the notebook to upload
           databricks_path: /Shared/**  # Path in the Databricks workspace
         secrets:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
