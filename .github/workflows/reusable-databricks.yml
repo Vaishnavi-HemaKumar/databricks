@@ -28,9 +28,14 @@ jobs:
       - name: Install Databricks CLI
         run: pip install databricks-cli
 
+      - name: Print Debug Information (for testing)
+        run: |
+          echo "DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}"
+          echo "DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}"
+
       - name: Configure Databricks CLI for the correct environment
         run: |
-          mkdir -p ~/.databricks-cli  # Create the directory if it doesn't exist
+          mkdir -p ~/.databricks-cli
           if [ "${{ inputs.environment }}" == "dev" ]; then
             echo "[DEFAULT]" > ~/.databricks-cli/config
             echo "host = ${{ secrets.DATABRICKS_HOST_DEV }}" >> ~/.databricks-cli/config
@@ -46,6 +51,7 @@ jobs:
 
       - name: Upload notebook to ${{ inputs.environment }}
         run: |
+          echo "Uploading notebook to Databricks..."
           databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
