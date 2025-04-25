@@ -1,0 +1,104 @@
+# .github/workflows/reusable-databricks.yml
+
+name: Reusable Databricks CI/CD AWS Workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      notebook_path:
+        required: true
+        type: string
+      databricks_path:
+        required: true
+        type: string
+      repo_path:
+        required: false
+        type: string
+      repo_branch:
+        required: false
+        type: string
+    secrets:
+      DATABRICKS_HOST:
+        required: true
+      DATABRICKS_TOKEN:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        run: pip install databricks-cli --upgrade  # Ensure the latest version
+
+
+      - name: Configure Databricks CLI
+        run: |
+          mkdir -p ~/.databricks-cli  # Ensure the directory exists
+          echo "[DEFAULT]" > ~/.databricks-cli/config
+          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
+          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+      # - name: Upload notebook to Databricks ${{ inputs.environment }}
+      #   run: |
+      #     databricks workspace import ${{ inputs.notebook_path }} ${{ inputs.databricks_path }} --language PYTHON --overwrite
+      #   env:
+      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+      # - name: Ensure Databricks folder exists
+      #   run: |
+      #     # Create the folder in Databricks if it does not exist
+      #     databricks workspace mkdirs "${{ inputs.databricks_path }}" || echo "Folder already exists"
+      #   env:
+      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+      # - name: Find and upload notebooks to Databricks ${{ inputs.environment }}
+      #   run: |
+      #     # Loop over each notebook found in the notebooks directory
+      #     for notebook in $(find ${{ inputs.notebook_path }} -type f \( -iname "*.dbc" -o -iname "*.py" -o -iname "*.ipynb" \)); do
+      #       # Get the base name of the notebook (filename only)
+      #       notebook_name=$(basename "$notebook")
+            
+      #       # Construct the target path in Databricks (make sure there's no double slashes)
+      #       target_path="${{ inputs.databricks_path }}/$notebook_name"
+
+      #       # Print the notebook path for debugging
+      #       echo "Uploading $notebook to $target_path"
+            
+      #       # Upload each notebook to the specified Databricks path
+      #       databricks workspace import "$notebook" "$target_path" --language PYTHON --overwrite
+      #     done
+      #   env:
+      #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+
+      - name: Switch Databricks Repo Branch (if provided)
+        if: ${{ inputs.repo_path != '' && inputs.repo_branch != '' }}
+        run: |
+          echo "Switching repo at ${{ inputs.repo_path }} to branch ${{ inputs.repo_branch }}"
+          databricks repos update --path "${{ inputs.repo_path }}" --branch "${{ inputs.repo_branch }}"
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+      # Replace workspace import with repo update equivalent as suggested
+      - name: Trigger Databricks Repo Update (Pull latest changes)
+        if: ${{ inputs.repo_path != '' && inputs.repo_branch != '' }}
+        run: |
+          echo "Triggering repo sync like git pull for ${{ inputs.repo_path }} on branch ${{ inputs.repo_branch }}"
+          databricks repos update --path "${{ inputs.repo_path }}" --branch "${{ inputs.repo_branch }}"
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
