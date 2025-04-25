@@ -8,25 +8,11 @@ on:
 
 jobs:
   sync_workspace:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Databricks CLI for dev environment
-        run: |
-          echo "Setting up Databricks CLI for dev environment"
-          echo "[DEFAULT]" > ~/.databricks-cli/config
-          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databricks-cli/config
-          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databricks-cli/config
-
-      - name: Call Reusable Databricks CI/CD Workflow for Dev
-        uses: ./.github/workflows/reusable_databricks.yml  # Path to the reusable workflow
-        with:
-          environment: dev  # Sync with the dev environment
-          notebook_path: notebooks/**  # Path to the notebook to upload
-          databricks_path: /Shared/**  # Path in the Databricks workspace
-        secrets:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    uses: ./.github/workflows/reusable_databricks.yml  # Path to the reusable workflow
+    with:
+      environment: dev  # Sync with the dev environment
+      notebook_path: notebooks/**  # Path to the notebook to upload
+      databricks_path: /Shared/**  # Path in the Databricks workspace
+    secrets:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
