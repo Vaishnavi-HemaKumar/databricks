@@ -11,7 +11,7 @@ on:
       promote_to_test:
         description: 'Promote to testuction environment?'
         required: true
-        default: 'true'
+        default: 'false'
 
 jobs:
   deploy-dev:
