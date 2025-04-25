@@ -1,0 +1,34 @@
+name: CI/CD Trigger for Databricks
+
+on:
+  push:
+    paths:
+      - 'notebooks/**'
+  workflow_dispatch:
+    inputs:
+      promote_to_test:
+        description: 'Promote to testuction environment?'
+        required: false
+        default: 'false'
+
+jobs:
+  deploy-dev:
+    uses: ./.github/workflows/reusable-databricks.yml
+    with:
+      environment: dev
+      notebook_path: notebooks/hello_world.py
+      databricks_path: /Shared/hello_world.py
+    secrets:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+
+  deploy-test:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.promote_to_test == 'true'
+    uses: ./.github/workflows/reusable-databricks.yml
+    with:
+      environment: test
+      notebook_path: notebooks/hello_world.py
+      databricks_path: /Shared/hello_world.py
+    secrets:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_TEST }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_TEST }}
