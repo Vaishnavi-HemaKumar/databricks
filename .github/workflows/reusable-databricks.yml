@@ -83,6 +83,14 @@ jobs:
       #     DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
       #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
+      - name: Sync latest Git changes in Databricks Repo
+        if: ${{ inputs.environment == 'dev' && inputs.repo_path != '' && inputs.repo_branch != '' }}
+        run: |
+          echo "Pulling latest from branch ${{ inputs.repo_branch }} into repo at ${{ inputs.repo_path }}"
+          databricks repos update --path "${{ inputs.repo_path }}" --branch "${{ inputs.repo_branch }}"
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
       - name: Ensure Databricks target folder exists
         if: ${{ inputs.environment == 'dev' }}
