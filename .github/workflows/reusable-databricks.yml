@@ -84,8 +84,8 @@ jobs:
       #     DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 
-      - name: Switch Databricks Repo Branch (if provided and not in dev environment)
-        if: ${{ inputs.environment != 'dev' && inputs.repo_path != '' && inputs.repo_branch != '' }}
+      - name: Switch Databricks Repo Branch 
+        if: ${{ inputs.environment == 'dev' && inputs.repo_branch != 'dev' }}
         run: |
           echo "Switching repo at ${{ inputs.repo_path }} to branch ${{ inputs.repo_branch }}"
           databricks repos update --path "${{ inputs.repo_path }}" --branch "${{ inputs.repo_branch }}"
@@ -94,7 +94,7 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
       - name: Trigger Databricks Repo Update (Pull latest changes)
-        if: ${{ inputs.environment != 'dev' && inputs.repo_path != '' && inputs.repo_branch != '' }}
+        if: ${{ inputs.environment == 'dev' && inputs.repo_branch != 'dev' }}
         run: |
           echo "Triggering repo sync like git pull for ${{ inputs.repo_path }} on branch ${{ inputs.repo_branch }}"
           databricks repos update --path "${{ inputs.repo_path }}" --branch "${{ inputs.repo_branch }}"
